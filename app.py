@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
-from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 from flask_migrate import Migrate
 import os
@@ -17,7 +16,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 ma = Marshmallow(app)
-bc = Bcrypt(app)
 
 
 
@@ -55,9 +53,8 @@ def create_user():
     password = post_data.get("password")
     email = post_data.get("email")
 
-    pw_hash = bc.generate_password_hash(password, 15).decode('utf-8')
+    new_user = User(username, password, email)
 
-    new_user = User(username, pw_hash, email)
     db.session.add(new_user)
     db.session.commit()
 
@@ -79,7 +76,7 @@ def verify():
 
     if user is None:
         return jsonify("User information not verified")
-    if not bc.check_password_hash(user.password, password):
+    if user.password != password:
         return jsonify("User information not verified")
 
     return jsonify("User Verified")
