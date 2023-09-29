@@ -68,13 +68,10 @@ def verify():
     if request.content_type != "application/json":
         return jsonify("Check your format of sending Data")
     post_data = request.get_json()
-    username = post_data.get("username")
+    email = post_data.get("email")
     password = post_data.get("password")
 
-
-    user = db.session.query(User).filter(
-        User.username == username).first()
-  
+    user = db.session.query(User).filter(User.email == email).first()
 
     if user is None:
         return jsonify("User information not verified")
@@ -82,6 +79,7 @@ def verify():
         return jsonify("User information not verified")
 
     return jsonify("User Verified")
+
 
 
 
