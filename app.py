@@ -71,11 +71,11 @@ def verify():
     post_data = request.get_json()
     username = post_data.get("username")
     password = post_data.get("password")
-    # email = post_data.get("email")
+
 
     user = db.session.query(User).filter(
         User.username == username).first()
-    # ue = db.session.query(User).filter(User.email == email).first()
+  
 
     if user is None:
         return jsonify("User information not verified")
@@ -137,6 +137,5 @@ def welcome():
     return 'Tu API funciona!! ¡Bienvenido a Login Cactus'
 
 if __name__ == '__main__':
-    # Usar el puerto proporcionado por Heroku o el 5000 en local
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
