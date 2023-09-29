@@ -10,7 +10,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app)
 bc = Bcrypt(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
