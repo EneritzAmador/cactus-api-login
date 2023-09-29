@@ -124,8 +124,8 @@ def edit_pw(id):
         return jsonify("Error updating PW")
     password = request.get_json().get("password")
     user = db.session.query(User).filter(User.id == id).first()
-    pw_hash = bc.generate_password_hash(password, 15).decode('utf-8')
-    user.password = pw_hash
+    user.password = password
+
 
     db.session.commit()
 
