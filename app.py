@@ -131,5 +131,7 @@ def edit_pw(id):
 def welcome():
     return 'Tu API funciona!! ¡Bienvenido a Login Cactus'
 
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    # Usar el puerto proporcionado por Heroku o el 5000 en local
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
