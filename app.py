@@ -4,6 +4,7 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
+from flask_migrate import Migrate
 import os
 
 load_dotenv()
@@ -14,15 +15,18 @@ CORS(app)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 ma = Marshmallow(app)
 bc = Bcrypt(app)
+
+
 
 class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String, unique=True)
 
     def __init__(self, username, password, email):
