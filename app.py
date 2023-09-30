@@ -111,8 +111,8 @@ def get_users():
 
 @app.route('/user/custom_login_get', methods=['GET'])
 def custom_login_get_handler():
-    email = request.args.get('email')
-    password = request.args.get('password')
+    users = User.query.all()
+    return jsonify(multi_user_schema.dump(users))
 
     # Verificar las credenciales del usuario y devolver una respuesta apropiada
     return jsonify({'message': 'Login successful'})
