@@ -109,7 +109,7 @@ def get_users():
     users = db.session.query(User).all()
     return jsonify(multi_user_schema.dump(users))
 
-@app.route('/user/login', methods=['GET'])
+@app.route('/user/custom_login', methods=['GET'])
 def login():
     email = request.args.get('email')
     password = request.args.get('password')
