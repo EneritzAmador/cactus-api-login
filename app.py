@@ -5,7 +5,10 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_migrate import Migrate
+import jwt
 import os
+
+SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'claverandom'
 
 load_dotenv()
 
@@ -79,6 +82,24 @@ def verify():
         return jsonify("User information not verified")
 
     return jsonify("User Verified")
+
+@app.route("/login", methods=["POST"])
+def login():
+    if request.content_type != "application/json":
+        return jsonify({"error": "Check your format of sending Data"}), 400
+
+    post_data = request.get_json()
+    email = post_data.get("email")
+    password = post_data.get("password")
+
+    user = db.session.query(User).filter(User.email == email).first()
+
+    if user is None or user.password != password:
+        return jsonify({"error": "Usuario y/o contraseña incorrectos"}), 401
+
+    token = jwt.encode({'user_id': user.id}, 'your_secret_key', algorithm='HS256')
+
+    return jsonify({"token": token.decode('utf-8')}), 200
 
 
 
