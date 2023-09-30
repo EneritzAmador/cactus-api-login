@@ -110,7 +110,7 @@ def get_users():
     return jsonify(multi_user_schema.dump(users))
 
 @app.route('/user/custom_login_get', methods=['GET'])
-def login():
+def custom_login_get_handler():
     email = request.args.get('email')
     password = request.args.get('password')
 
