@@ -88,7 +88,7 @@ def get_users():
     users = db.session.query(User).all()
     return jsonify(multi_user_schema.dump(users))
 
-@app.route('/users', methods=['GET'])
+@app.route('/getusers', methods=['GET'])
 def get_all_users():
     users = User.query.all()
     return jsonify(multi_user_schema.dump(users))
