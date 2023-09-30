@@ -109,6 +109,14 @@ def get_users():
     users = db.session.query(User).all()
     return jsonify(multi_user_schema.dump(users))
 
+@app.route('/user/login', methods=['GET'])
+def login():
+    email = request.args.get('email')
+    password = request.args.get('password')
+
+    # Verificar las credenciales del usuario y devolver una respuesta apropiada
+    return jsonify({'message': 'Login successful'})
+
 @app.route('/getusers', methods=['GET'])
 def get_all_users():
     users = User.query.all()
