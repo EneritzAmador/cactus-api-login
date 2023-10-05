@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from decouple import config
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -8,8 +9,6 @@ from flask_migrate import Migrate
 import jwt
 import os
 
-#A secret key is established for JWT (JSON Web Tokens)
-SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'claverandom'
 
 load_dotenv()
 
@@ -24,6 +23,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 ma = Marshmallow(app)
 
+SECRET_KEY = config('JWT_SECRET_KEY')
 
 #A User class is defined that represents the user table in the database.
 class User(db.Model):
