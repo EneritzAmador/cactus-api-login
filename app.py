@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 import jwt
 import os
 
+#A secret key is established for JWT (JSON Web Tokens)
 SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'claverandom'
 
 load_dotenv()
@@ -16,6 +17,7 @@ app = Flask(__name__)
 cors = CORS(app)
 bc = Bcrypt(app)
 
+#Configures SQLAlchemy and Marshmallow database for schema management and migrations.
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
@@ -23,7 +25,7 @@ migrate = Migrate(app, db)
 ma = Marshmallow(app)
 
 
-
+#A User class is defined that represents the user table in the database.
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -48,6 +50,7 @@ user_schema = UserSchema()
 multi_user_schema = UserSchema(many=True)
 
 
+#Route to create user
 @app.route("/user/create", methods=["POST"])
 def create_user():
     if request.content_type != "application/json":
@@ -66,6 +69,7 @@ def create_user():
     return jsonify("User Created", user_schema.dump(new_user))
 
 
+#Route to verify
 @app.route("/verify", methods=["POST"])
 def verify():
     if request.content_type != "application/json":
@@ -83,6 +87,8 @@ def verify():
 
     return jsonify("User Verified")
 
+
+#Route for user authentication
 @app.route("/login", methods=["POST"])
 def login():
     if request.content_type != "application/json":
@@ -103,26 +109,27 @@ def login():
 
 
 
-
+#Route to get all users from the database
 @app.route('/user/get')
 def get_users():
     users = db.session.query(User).all()
     return jsonify(multi_user_schema.dump(users))
 
+#Route to get all users from the database
 @app.route('/user/custom_login_get', methods=['GET'])
 def custom_login_get_handler():
     users = User.query.all()
     return jsonify(multi_user_schema.dump(users))
-
-    # Verificar las credenciales del usuario y devolver una respuesta apropiada
+    
     return jsonify({'message': 'Login successful'})
 
+#Route to get all users from the database
 @app.route('/getusers', methods=['GET'])
 def get_all_users():
     users = User.query.all()
     return jsonify(multi_user_schema.dump(users))
 
-
+#Route to delete user by ID
 @app.route('/user/delete/<id>', methods=["DELETE"])
 def delete_user(id):
     delete_user = db.session.query(User).filter(User.id == id).first()
@@ -131,6 +138,7 @@ def delete_user(id):
     return jsonify("User Profile has been DELETED!")
 
 
+#Route to update username and email by ID
 @app.route('/user/update/<id>', methods=["PUT"])
 def edit_user(id):
     if request.content_type != 'application/json':
@@ -149,7 +157,7 @@ def edit_user(id):
     db.session.commit()
     return jsonify("User Information Has Been Updated!")
 
-
+#Route to update password by ID
 @app.route('/user/editpw/<id>', methods=["PUT"])
 def edit_pw(id):
     if request.content_type != 'application/json':
@@ -163,10 +171,12 @@ def edit_pw(id):
 
     return jsonify("Password Changed Successfully", user_schema.dump(user))
 
+# Route to the Welcome message
 @app.route('/welcome')
 def welcome():
     return 'Tu API funciona!! ¡Bienvenido a Login Cactus'
 
+# Returns a welcome message
 @app.route('/')
 def index():
     return '¡Hola! Esta es la página principal d emi API cactus.'
